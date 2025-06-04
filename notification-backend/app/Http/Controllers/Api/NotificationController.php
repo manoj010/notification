@@ -13,10 +13,10 @@ class NotificationController extends Controller
 {
     public function __construct(protected NotificationService $notificationService) {}
 
-    public function store(NotificationRequest $request)
+    public function store(NotificationRequest $request): JsonResponse
     {
         try {
-            return $this->notificationService->processStore($request);
+            return $this->success($this->notificationService->processStore($request), 'Message saved successfully');
         } catch (Throwable $th) {
             $this->logException($th);
 
@@ -24,13 +24,13 @@ class NotificationController extends Controller
         }
     }
 
-    public function recent()
+    public function recent(): JsonResponse
     {
-        return $this->notificationService->processRecent();
+        return $this->success($this->notificationService->processRecent(), 'Recent Messages');
     }
 
-    public function summary()
+    public function summary(): JsonResponse
     {
-        return $this->notificationService->processSummary();
+        return $this->success($this->notificationService->processSummary(), 'Summary');
     }
 }

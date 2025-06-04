@@ -16,11 +16,11 @@ class NotificationService
     {
         $validatedData = $request->validated();
 
-        return Notification::create($validatedData);
+        $notification = Notification::create($validatedData);
 
-//        Redis::publish('notifications', json_encode($notification));
+        Redis::publish('notifications', json_encode($notification));
 
-//        return response()->json(['message' => 'Notification queued', 'data' => $notification]);
+        return $notification;
     }
 
     public function processRecent()
@@ -28,15 +28,15 @@ class NotificationService
         return Notification::latest()->limit(10)->get();
     }
 
-    public function processSummary()
+    public function processSummary(): array
     {
         $total = Notification::count();
         $processed = Notification::where('processed', true)->count();
 
-        return response()->json([
+        return [
             'total' => $total,
             'processed' => $processed,
             'pending' => $total - $processed,
-        ]);
+        ];
     }
 }
