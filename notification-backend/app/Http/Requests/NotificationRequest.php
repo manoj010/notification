@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\FormRequest;
 
 class NotificationRequest extends FormRequest
 {
@@ -11,7 +11,7 @@ class NotificationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,6 @@ class NotificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
             'message' => 'required|string',
         ];
     }

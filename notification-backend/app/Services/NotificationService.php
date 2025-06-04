@@ -8,21 +8,27 @@ use Illuminate\Support\Facades\Redis;
 
 class NotificationService
 {
-    public function processStore($request): JsonResponse
+    public function __construct(
+        protected Notification $notification
+    ) {}
+
+    public function processStore($request)
     {
-        $notification = Notification::create($request);
+        $validatedData = $request->validated();
 
-        Redis::publish('notifications', json_encode($notification));
+        return Notification::create($validatedData);
 
-        return response()->json(['message' => 'Notification queued', 'data' => $notification]);
+//        Redis::publish('notifications', json_encode($notification));
+
+//        return response()->json(['message' => 'Notification queued', 'data' => $notification]);
     }
 
-    public function processRecent(): JsonResponse
+    public function processRecent()
     {
         return Notification::latest()->limit(10)->get();
     }
 
-    public function processSummary(): JsonResponse
+    public function processSummary()
     {
         $total = Notification::count();
         $processed = Notification::where('processed', true)->count();
