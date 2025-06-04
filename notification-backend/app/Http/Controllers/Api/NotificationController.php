@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NotificationRequest;
 use App\Http\Resources\NotificationResource;
 use App\Services\NotificationService;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Throwable;
 
@@ -39,5 +40,12 @@ class NotificationController extends Controller
         $summary = $this->notificationService->processSummary();
 
         return $this->success(NotificationResource::collection($summary), 'Summary');
+    }
+
+    public function update(Request $request): JsonResponse
+    {
+        $id = $request->input('id');
+
+        return $this->notificationService->processUpdate($id);
     }
 }

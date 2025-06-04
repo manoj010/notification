@@ -41,4 +41,15 @@ class NotificationService
             'pending' => $total - $processed,
         ];
     }
+
+    public function processUpdate(int $id): JsonResponse
+    {
+        $updated = Notification::where('id', $id)->update(['processed' => true]);
+
+        if ($updated) {
+            return response()->json(['status' => 'updated']);
+        } else {
+            return response()->json(['status' => 'not found or already processed'], 404);
+        }
+    }
 }
