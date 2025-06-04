@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\NotificationRequest;
+use App\Http\Resources\NotificationResource;
 use App\Services\NotificationService;
 use Illuminate\Http\JsonResponse;
 use Throwable;
@@ -16,7 +17,9 @@ class NotificationController extends Controller
     public function store(NotificationRequest $request): JsonResponse
     {
         try {
-            return $this->success($this->notificationService->processStore($request), 'Message saved successfully');
+            $result = $this->notificationService->processStore($request);
+
+            return $this->success(new NotificationResource($result), 'Message saved successfully');
         } catch (Throwable $th) {
             $this->logException($th);
 
@@ -26,11 +29,15 @@ class NotificationController extends Controller
 
     public function recent(): JsonResponse
     {
-        return $this->success($this->notificationService->processRecent(), 'Recent Messages');
+        $recent = $this->notificationService->processRecent();
+
+        return $this->success(NotificationResource::collection($recent), 'Recent Messages');
     }
 
     public function summary(): JsonResponse
     {
-        return $this->success($this->notificationService->processSummary(), 'Summary');
+        $summary = $this->notificationService->processSummary();
+
+        return $this->success(NotificationResource::collection($summary), 'Summary');
     }
 }

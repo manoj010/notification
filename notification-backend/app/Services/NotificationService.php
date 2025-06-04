@@ -16,6 +16,8 @@ class NotificationService
     {
         $validatedData = $request->validated();
 
+        $validatedData['processed'] = false;
+
         $notification = Notification::create($validatedData);
 
         Redis::publish('notifications', json_encode($notification));

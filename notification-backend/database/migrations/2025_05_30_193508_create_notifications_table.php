@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('mock');
-            $table->text('message');
+            $table->bigInteger('user_id');
+            $table->string('message');
             $table->boolean('processed')->default(false);
             $table->timestamps();
         });
